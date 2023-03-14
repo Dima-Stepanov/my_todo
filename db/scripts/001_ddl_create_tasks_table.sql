@@ -1,4 +1,4 @@
---Создание таблицы с пользователями
+--Создание таблицы с задачами
 CREATE TABLE tasks
 (
     id          serial primary key,
