@@ -1,11 +1,11 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class HibernateTaskRepository implements TaskRepository {
-    private final SessionFactory sessionFactory;
+    private final CrudRepository crudRepository;
 
     /**
      * Сохранить в базе
@@ -32,18 +32,18 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public Task create(Task task) {
-        return null;
+        crudRepository.run(session -> session.persist(task));
+        return task;
     }
 
     /**
      * Обновление в базе задачи
      *
      * @param task обновленная задача
-     * @return boolean true false
      */
     @Override
-    public boolean update(Task task) {
-        return false;
+    public void update(Task task) {
+        crudRepository.run(session -> session.merge(task));
     }
 
     /**
@@ -54,7 +54,11 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public Optional<Task> findTaskById(int taskId) {
-        return Optional.empty();
+        return crudRepository.optional(
+                "from Task where id =:taskId",
+                Task.class,
+                Map.of("taskId", taskId)
+        );
     }
 
     /**
@@ -65,38 +69,51 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public boolean delete(int taskId) {
-        return false;
+        return crudRepository.run(
+                "delete from Task where id =:taskId",
+                Map.of("taskId", taskId)
+        );
     }
 
     /**
      * Список всех задач в системе
+     * отсортированных по ID
      *
      * @return список всех задач
      */
     @Override
-    public Collection<Task> findAll() {
-        return null;
+    public Collection<Task> findAllOrderById() {
+        return crudRepository.query(
+                "from Task order by id asc",
+                Task.class
+        );
     }
 
     /**
      * Список завершённых задач
-     * отсортированных по дате создания от новых к старым
+     * отсортированных по ID
      *
      * @return список завершённых задач.
      */
     @Override
-    public Collection<Task> findAllDoneOrderByCrete() {
-        return null;
+    public Collection<Task> findAllDoneOrderById() {
+        return crudRepository.query(
+                "from Task where done is false order by id asc",
+                Task.class
+        );
     }
 
     /**
      * Список не завершённых задач
-     * отсортированных по дате создания от новых к старым.
+     * отсортированных по ID.
      *
      * @return список новых задач
      */
     @Override
-    public Collection<Task> findAllNewOrderByCrete() {
-        return null;
+    public Collection<Task> findAllNewOrderById() {
+        return crudRepository.query(
+                "from Task where done true or done is null order by asc",
+                Task.class
+        );
     }
 }

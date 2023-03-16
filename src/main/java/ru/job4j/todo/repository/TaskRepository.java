@@ -28,9 +28,8 @@ public interface TaskRepository {
      * Обновление в базе задачи
      *
      * @param task обновленная задача
-     * @return boolean true false
      */
-    boolean update(Task task);
+    void update(Task task);
 
     /**
      * Поиск задачи по ID
@@ -53,7 +52,7 @@ public interface TaskRepository {
      *
      * @return список всех задач
      */
-    Collection<Task> findAll();
+    Collection<Task> findAllOrderById();
 
     /**
      * Список завершённых задач
@@ -61,7 +60,7 @@ public interface TaskRepository {
      *
      * @return список завершённых задач.
      */
-    Collection<Task> findAllDoneOrderByCrete();
+    Collection<Task> findAllDoneOrderById();
 
     /**
      * Список не завершённых задач
@@ -69,5 +68,5 @@ public interface TaskRepository {
      *
      * @return список новых задач
      */
-    Collection<Task> findAllNewOrderByCrete();
+    Collection<Task> findAllNewOrderById();
 }

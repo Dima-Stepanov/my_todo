@@ -31,6 +31,10 @@ public class Task {
     private LocalDateTime created;
     private boolean done;
 
+    public boolean getDone() {
+        return done;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
