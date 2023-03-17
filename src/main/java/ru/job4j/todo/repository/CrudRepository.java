@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -31,14 +31,12 @@ import java.util.function.Function;
  * @since 16.03.2023
  */
 @AllArgsConstructor
+@Component
 public class CrudRepository {
     private final SessionFactory sessionFactory;
 
-    public void run(Consumer<Session> command) {
-        tx(session -> {
-            command.accept(session);
-            return null;
-        });
+    public boolean run(Function<Session, Boolean> command) {
+        return tx(command);
     }
 
     public Boolean run(String query, Map<String, Object> args) {
@@ -92,7 +90,7 @@ public class CrudRepository {
     public <T> T tx(Function<Session, T> command) {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
-        try (session) {
+        try {
             transaction = session.beginTransaction();
             T rsl = command.apply(session);
             transaction.commit();
@@ -102,6 +100,8 @@ public class CrudRepository {
                 transaction.rollback();
             }
             throw e;
+        } finally {
+            session.close();
         }
     }
 }

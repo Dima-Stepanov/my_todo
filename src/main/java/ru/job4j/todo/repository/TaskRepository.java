@@ -25,19 +25,19 @@ public interface TaskRepository {
     Task create(Task task);
 
     /**
-     * Обновление в базе задачи
-     *
-     * @param task обновленная задача
-     */
-    void update(Task task);
-
-    /**
      * Поиск задачи по ID
      *
      * @param taskId ID задачи
      * @return Optional задачи
      */
     Optional<Task> findTaskById(int taskId);
+
+    /**
+     * Обновление в базе задачи
+     *
+     * @param task обновленная задача
+     */
+    boolean update(Task task);
 
     /**
      * Удаление задачи по ID

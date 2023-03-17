@@ -19,8 +19,8 @@ import java.util.Optional;
  * @author Dmitry Stepanov, user Dmitry
  * @since 14.03.2023
  */
-@Repository
 @AllArgsConstructor
+@Repository
 public class HibernateTaskRepository implements TaskRepository {
     private final CrudRepository crudRepository;
 
@@ -32,18 +32,11 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public Task create(Task task) {
-        crudRepository.run(session -> session.persist(task));
+        crudRepository.run(session -> {
+            session.persist(task);
+            return true;
+        });
         return task;
-    }
-
-    /**
-     * Обновление в базе задачи
-     *
-     * @param task обновленная задача
-     */
-    @Override
-    public void update(Task task) {
-        crudRepository.run(session -> session.merge(task));
     }
 
     /**
@@ -59,6 +52,19 @@ public class HibernateTaskRepository implements TaskRepository {
                 Task.class,
                 Map.of("taskId", taskId)
         );
+    }
+
+    /**
+     * Обновление в базе задачи
+     *
+     * @param task обновленная задача
+     */
+    @Override
+    public boolean update(Task task) {
+        return crudRepository.run(session -> {
+            session.merge(task);
+            return true;
+        });
     }
 
     /**
@@ -112,7 +118,7 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findAllNewOrderById() {
         return crudRepository.query(
-                "from Task where done true or done is null order by asc",
+                "from Task where done is true or done is null order by id asc",
                 Task.class
         );
     }
