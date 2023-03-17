@@ -26,7 +26,7 @@ import java.util.Objects;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
     private String description;
     private LocalDateTime created;
     private boolean done;

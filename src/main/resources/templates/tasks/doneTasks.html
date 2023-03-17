@@ -14,7 +14,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-    <title>Завершенные задания</title>
+    <title>Выполенные задания</title>
 </head>
 <body>
 <div class="container-xl">
@@ -30,16 +30,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/tasks/all">Все</a>
+                        <a class="nav-link active" aria-current="page" th:href="@{/tasks/all}">Все</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/tasks/done">Выполненные</a>
+                        <a class="nav-link" th:href="@{/tasks/done}">Выполненные</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/tasks/new">Новые</a>
+                        <a class="nav-link" th:href="@{/tasks/new}">Новые</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-success" role="button" href="/tasks/create">Добавить задание</a>
+                        <a class="btn btn-outline-success" role="button" th:href="@{/tasks/create}">Добавить задание</a>
                     </li>
                 </ul>
             </div>
@@ -71,7 +71,7 @@
                         </a>
                     </td>
                     <td th:text="${task.description}"/>
-                    <td th:text="${#temporals.format(task.created, 'dd MM yyyy HH:mm:ss')}"/>
+                    <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}"/>
                     <td style="font-size: 2rem; color: cornflowerblue;">
                         <span th:if="${task.done}" class="bi bi-bookmark"/>
                         <span th:if="${!task.done}" class="bi bi-bookmark-check"/>

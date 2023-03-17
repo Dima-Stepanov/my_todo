@@ -48,7 +48,7 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Optional<Task> findTaskById(int taskId) {
         return crudRepository.optional(
-                "from Task where id =:taskId",
+                "from Task where id = :taskId",
                 Task.class,
                 Map.of("taskId", taskId)
         );
@@ -76,7 +76,7 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public boolean delete(int taskId) {
         return crudRepository.run(
-                "delete from Task where id =:taskId",
+                "delete from Task where id = :taskId",
                 Map.of("taskId", taskId)
         );
     }

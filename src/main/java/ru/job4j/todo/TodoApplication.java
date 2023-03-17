@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TodoApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(TodoApplication.class.getSimpleName());
-    private static final String START_PAGE = "http:/localhost:8080/index";
+    private static final String START_PAGE = "http://localhost:8080/index";
 
     public static void main(String[] args) {
         SpringApplication.run(TodoApplication.class, args);
