@@ -44,6 +44,11 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
+    public boolean setStatusTaskById(int taskId, boolean status) {
+        return taskRepository.setStatusTaskById(taskId, status);
+    }
+
+    @Override
     public Collection<Task> findAllOrderById() {
         return taskRepository.findAllOrderById();
     }

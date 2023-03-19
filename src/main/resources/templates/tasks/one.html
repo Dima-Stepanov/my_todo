@@ -30,7 +30,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" th:href="@{/tasks/all}">Все</a>
+                        <a class="nav-link active" aria-current="page" th:href="@{/tasks}">Все</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/tasks/done}">Выполненные</a>
@@ -46,16 +46,25 @@
         </div>
     </nav>
     <div class="container mt-4">
-        <h3>Детали</h3>
+        <h3>Подробное описание</h3>
         <div class="card" style="width: 50rem;">
             <div class="card-body">
                 <h5 class="card-title" th:text="'Задание № ' + ${task.id}">Задние №</h5>
-                <h6 class="card-subtitle mb-2 text-muted" th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}">Дата создания</h6>
+                <h6 class="card-subtitle mb-2 text-muted"
+                    th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}">Дата создания</h6>
                 <p class="card-text" th:text="${task.description}">Описание</p>
+                <div th:if="${task.done}" class="alert alert-primary" role="alert">
+                    Задание активно.
+                </div>
+                <div th:if="${!task.done}" class="alert alert-success" role="alert">
+                    Задание выполнено.
+                </div>
                 <!--Выполнено, Отредактировать, Удалить.-->
-                <a class="btn btn-success" role="button" th:href="@{tasks/done/{taskId}(taskId=${task.id})}">Выполнено</a>
-                <a class="btn btn-info" role="button" th:href="@{tasks/edit/{taskId}(taskId=${task.id})}">Отредактировать</a>
-                <a class="btn btn-warning" role="button" th:href="@{/tasks/delete/{taskId}(taskId=${task.id})}">Удалить</a>
+                <a class="btn btn-success"
+                   th:if="${task.done}"
+                   th:href="@{/tasks/doneTask/{taskId}(taskId=${task.id})}">Выполнено</a>
+                <a class="btn btn-info" th:href="@{/tasks/edit/{taskId}(taskId=${task.id})}">Отредактировать</a>
+                <a class="btn btn-warning" th:href="@{/tasks/delete/{taskId}(taskId=${task.id})}">Удалить</a>
             </div>
         </div>
     </div>

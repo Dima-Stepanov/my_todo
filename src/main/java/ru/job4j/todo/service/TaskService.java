@@ -25,6 +25,8 @@ public interface TaskService {
 
     boolean delete(int taskId);
 
+    boolean setStatusTaskById(int taskId, boolean status);
+
     Collection<Task> findAllOrderById();
 
     Collection<Task> findAllDoneOrderById();

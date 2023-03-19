@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.todo.service.TaskService;
 
@@ -30,7 +31,7 @@ public class TaskController {
      * @param model Model
      * @return allTasks.html
      */
-    @GetMapping("/all")
+    @GetMapping()
     public String getAllTasks(Model model) {
         var allTasks = taskService.findAllOrderById();
         model.addAttribute("tasksList", allTasks);
@@ -75,5 +76,23 @@ public class TaskController {
         }
         model.addAttribute("task", taskOptional.get());
         return "tasks/one";
+    }
+
+    /**
+     * Метод обрабатывает Post запрос,
+     * на перевод задание в состояние выполнено.
+     *
+     * @param taskId int ID Task
+     * @param model  Model
+     * @return page done or errors
+     */
+    @GetMapping("/doneTask/{taskId}")
+    public String postDoneTask(@PathVariable int taskId, Model model) {
+        var result = taskService.setStatusTaskById(taskId, false);
+        if (!result) {
+            model.addAttribute("message", "Задание № " + taskId + " не изменено");
+            return "statuses/errors/404";
+        }
+        return "redirect:/tasks/" + taskId;
     }
 }

@@ -48,6 +48,14 @@ public interface TaskRepository {
     boolean delete(int taskId);
 
     /**
+     * Устанавливает задачу как выполненную по id
+     *
+     * @param taskId ID Task
+     * @return true or false
+     */
+    boolean setStatusTaskById(int taskId, boolean status);
+
+    /**
      * Список всех задач в системе
      *
      * @return список всех задач

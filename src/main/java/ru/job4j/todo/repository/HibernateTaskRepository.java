@@ -82,6 +82,21 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     /**
+     * Устанавливает задачу как выполненную по id
+     *
+     * @param taskId ID Task
+     * @return true or false
+     */
+    @Override
+    public boolean setStatusTaskById(int taskId, boolean status) {
+        return crudRepository.run(
+                "UPDATE Task AS t SET t.done = :status WHERE t.id =:taskId",
+                Map.of("status", status,
+                        "taskId", taskId)
+        );
+    }
+
+    /**
      * Список всех задач в системе
      * отсортированных по ID
      *
