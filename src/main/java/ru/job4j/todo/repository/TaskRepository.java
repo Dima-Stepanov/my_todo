@@ -37,23 +37,21 @@ public interface TaskRepository {
      *
      * @param task обновленная задача
      */
-    boolean update(Task task);
+    void update(Task task);
 
     /**
      * Удаление задачи по ID
      *
      * @param taskId id задачи которую нужно удалить
-     * @return boolean true false
      */
-    boolean delete(int taskId);
+    void delete(int taskId);
 
     /**
-     * Устанавливает задачу как выполненную по id
+     * Изменяет статус задачи.
      *
      * @param taskId ID Task
-     * @return true or false
      */
-    boolean setStatusTaskById(int taskId, boolean status);
+    void setStatusTaskById(int taskId, boolean status);
 
     /**
      * Список всех задач в системе

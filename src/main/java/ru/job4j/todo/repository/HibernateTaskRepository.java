@@ -32,10 +32,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public Task create(Task task) {
-        crudRepository.run(session -> {
-            session.persist(task);
-            return true;
-        });
+        crudRepository.run(session -> session.persist(task));
         return task;
     }
 
@@ -60,37 +57,34 @@ public class HibernateTaskRepository implements TaskRepository {
      * @param task обновленная задача
      */
     @Override
-    public boolean update(Task task) {
-        return crudRepository.run(session -> {
-            session.merge(task);
-            return true;
-        });
+    public void update(Task task) {
+        crudRepository.run(session -> session.merge(task));
     }
 
     /**
      * Удаление задачи по ID
      *
      * @param taskId id задачи которую нужно удалить
-     * @return boolean true false
      */
     @Override
-    public boolean delete(int taskId) {
-        return crudRepository.run(
+    public void delete(int taskId) {
+        crudRepository.run(
                 "delete from Task where id = :taskId",
                 Map.of("taskId", taskId)
         );
     }
 
     /**
-     * Устанавливает задачу как выполненную по id
+     * Изменяет статус задачи.
+     * Выполнена status = true, set done = true.
+     * Активна status = false, set done = false.
      *
      * @param taskId ID Task
-     * @return true or false
      */
     @Override
-    public boolean setStatusTaskById(int taskId, boolean status) {
-        return crudRepository.run(
-                "UPDATE Task AS t SET t.done = :status WHERE t.id =:taskId",
+    public void setStatusTaskById(int taskId, boolean status) {
+        crudRepository.run(
+                "UPDATE Task AS t SET t.done =:status WHERE t.id =:taskId",
                 Map.of("status", status,
                         "taskId", taskId)
         );
@@ -119,7 +113,7 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findAllDoneOrderById() {
         return crudRepository.query(
-                "from Task where done is false order by id asc",
+                "from Task where done is true order by id asc",
                 Task.class
         );
     }
@@ -133,7 +127,7 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findAllNewOrderById() {
         return crudRepository.query(
-                "from Task where done is true or done is null order by id asc",
+                "from Task where done is false or done is null order by id asc",
                 Task.class
         );
     }

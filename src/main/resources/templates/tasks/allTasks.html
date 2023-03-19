@@ -73,8 +73,8 @@
                     <td th:text="${task.description}"/>
                     <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}"/>
                     <td style="font-size: 2rem; color: cornflowerblue;">
-                        <span th:if="${task.done}" class="bi bi-bookmark"/>
-                        <span th:if="${!task.done}" class="bi bi-bookmark-check"/>
+                        <span th:if="${!task.done}" class="bi bi-bookmark"/>
+                        <span th:if="${task.done}" class="bi bi-bookmark-check"/>
                     </td>
                 </tr>
                 </tbody>

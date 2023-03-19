@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -35,19 +36,22 @@ import java.util.function.Function;
 public class CrudRepository {
     private final SessionFactory sessionFactory;
 
-    public boolean run(Function<Session, Boolean> command) {
-        return tx(command);
+    public void run(Consumer<Session> command) {
+        tx(session -> {
+            command.accept(session);
+            return null;
+        });
     }
 
-    public Boolean run(String query, Map<String, Object> args) {
-        Function<Session, Boolean> command = session -> {
+    public void run(String query, Map<String, Object> args) {
+        Consumer<Session> command = session -> {
             var sessionQuery = session.createQuery(query);
             for (Map.Entry<String, Object> arg : args.entrySet()) {
                 sessionQuery.setParameter(arg.getKey(), arg.getValue());
             }
-            return sessionQuery.executeUpdate() > 0;
+            sessionQuery.executeUpdate();
         };
-        return tx(command);
+        run(command);
     }
 
     public <T> Optional<T> optional(String query, Class<T> cl, Map<String, Object> args) {
@@ -84,7 +88,7 @@ public class CrudRepository {
      * Реализация шаблона WRAPPER
      *
      * @param command Function
-     * @param <T> type
+     * @param <T>     type
      * @return type
      */
     public <T> T tx(Function<Session, T> command) {
