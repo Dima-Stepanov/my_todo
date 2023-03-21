@@ -5,8 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -140,7 +143,12 @@ public class TaskController {
      * @return redirect:tasks/taskId or error page
      */
     @PostMapping("/update")
-    public String postUpdateTask(@ModelAttribute Task task, Model model) {
+    public String postUpdateTask(@ModelAttribute Task task,
+                                 Model model,
+                                 HttpServletRequest request) {
+        var session = request.getSession();
+        var user = (User) session.getAttribute("user");
+        task.setUser(user);
         var isUpdate = taskService.update(task);
         if (!isUpdate) {
             model.addAttribute("message", "Задание № "
@@ -168,7 +176,11 @@ public class TaskController {
      * @return redirect:/tasks/taskId
      */
     @PostMapping("/create")
-    public String postCreateTask(@ModelAttribute Task task) {
+    public String postCreateTask(@ModelAttribute Task task,
+                                 HttpServletRequest request) {
+        var session = request.getSession();
+        var user = (User) session.getAttribute("user");
+        task.setUser(user);
         task.setCreated(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         taskService.create(task);
         return "redirect:/tasks/" + task.getId();
