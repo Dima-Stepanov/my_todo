@@ -64,6 +64,10 @@
                     th:text="'Создал: ' + ${task.user.name}">Пользователь</h6>
                 <h6 class="card-subtitle mb-2 text-muted"
                     th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}">Дата создания</h6>
+                <h6 th:if="${task.priority.position==1}"
+                    class="card-subtitle mb-2 text-danger">Приоритет: CРОЧНО</h6>
+                <h6 th:if="${task.priority.position==2}"
+                    class="card-subtitle mb-2 text-success">Приоритет: НОРМАЛЬНО</h6>
                 <p class="card-text" th:text="${task.description}">Описание</p>
                 <div th:if="${!task.done}" class="alert alert-primary" role="alert">
                     Задание активно.

@@ -45,7 +45,11 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Optional<Task> findTaskById(int taskId) {
         return crudRepository.optional(
-                "from Task where id = :taskId",
+                """
+                        FROM Task AS t 
+                        JOIN FETCH t.priority 
+                        WHERE t.id = :taskId
+                        """,
                 Task.class,
                 Map.of("taskId", taskId)
         );
@@ -99,7 +103,10 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findAllOrderById() {
         return crudRepository.query(
-                "from Task order by id asc",
+                """
+                        FROM Task AS t 
+                        JOIN FETCH t.priority 
+                        ORDER BY t.id ASC""",
                 Task.class
         );
     }
@@ -113,7 +120,11 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findAllDoneOrderById() {
         return crudRepository.query(
-                "from Task where done is true order by id asc",
+                """
+                        FROM Task AS t 
+                        JOIN FETCH t.priority 
+                        WHERE t.done IS true 
+                        ORDER BY t.id ASC""",
                 Task.class
         );
     }
@@ -127,7 +138,11 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findAllNewOrderById() {
         return crudRepository.query(
-                "from Task where done is false or done is null order by id asc",
+                """
+                        FROM Task AS t 
+                        JOIN FETCH t.priority 
+                        WHERE t.done IS false 
+                        ORDER BY t.id ASC""",
                 Task.class
         );
     }

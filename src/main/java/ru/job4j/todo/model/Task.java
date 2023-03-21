@@ -4,7 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 3. Мидл
@@ -30,14 +30,17 @@ public class Task {
     @EqualsAndHashCode.Include
     private int id;
     private String description;
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime
+            .now()
+            .truncatedTo(ChronoUnit.SECONDS);
+    @Column(updatable = false)
     private boolean done;
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public boolean getDone() {
-        return done;
-    }
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "priority_id")
+    private Priority priority;
 }

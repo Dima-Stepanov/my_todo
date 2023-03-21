@@ -3,6 +3,6 @@ CREATE TABLE tasks
 (
     id          serial primary key,
     description TEXT,
-    created     TIMESTAMP,
-    done        BOOLEAN
+    created     TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    done        BOOLEAN DEFAULT false
 );

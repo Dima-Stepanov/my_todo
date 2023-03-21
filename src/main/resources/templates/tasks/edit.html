@@ -61,6 +61,7 @@
             <form th:action="@{/tasks/update}" method="post" th:object="${task}">
                 <input type="hidden" name="id" th:field="*{id}">
                 <input type="hidden" name="created" th:field="*{created}">
+                <input type="hidden" name="priority" th:field="*{priority}">
                 <div class="card-body">
                     <h5 class="card-title" th:text="'Задание № ' + ${task.id}">Задние №</h5>
                     <h6 class="card-subtitle mb-2 text-muted"

@@ -64,8 +64,9 @@
                     <th scope="col"></th>
                     <th scope="col">#</th>
                     <th scope="col">Описание</th>
-                    <th scope="col">Дата создания</th>
-                    <th scope="col">Ответственный</th>
+                    <th scope="col">Важность</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Создал</th>
                     <th scope="col">Статус</th>
                 </tr>
                 </thead>
@@ -82,11 +83,23 @@
                         </a>
                     </td>
                     <td th:text="${task.description}"/>
-                    <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}"/>
+                    <td>
+                        <span th:if="${task.priority.position==1}"
+                              style="font-size: 2rem; color: #fc0000;"
+                              class="bi bi-1-square"/>
+                        <span th:if="${task.priority.position==2}"
+                              style="font-size: 2rem; color: #00a202;"
+                              class="bi bi-2-square"/>
+                    </td>
+                    <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"/>
                     <td th:text="${task.user.name}"/>
-                    <td style="font-size: 2rem; color: cornflowerblue;">
-                        <span th:if="${!task.done}" class="bi bi-bookmark"/>
-                        <span th:if="${task.done}" class="bi bi-bookmark-check"/>
+                    <td>
+                        <span th:if="${!task.done}"
+                              style="font-size: 2rem; color: #5192ff;"
+                              class="bi bi-bookmark"/>
+                        <span th:if="${task.done}"
+                              style="font-size: 2rem; color: #00a202;"
+                              class="bi bi-bookmark-check"/>
                     </td>
                 </tr>
                 </tbody>

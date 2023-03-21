@@ -1,6 +1,7 @@
 package ru.job4j.todo.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
@@ -20,6 +21,7 @@ import java.util.Optional;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
 
@@ -39,6 +41,7 @@ public class SimpleTaskService implements TaskService {
             taskRepository.update(task);
             return true;
         } catch (Exception e) {
+            log.error("UPDATE Task ID:{} is ERROR {}", task.getId(), e.toString());
             e.printStackTrace();
             return false;
         }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
@@ -152,8 +153,8 @@ public class TaskController {
         var isUpdate = taskService.update(task);
         if (!isUpdate) {
             model.addAttribute("message", "Задание № "
-                    + task.getId()
-                    + " не изменено");
+                                          + task.getId()
+                                          + " не изменено");
             return "statuses/errors/404";
         }
         return "redirect:/tasks/" + task.getId();
@@ -180,8 +181,9 @@ public class TaskController {
                                  HttpServletRequest request) {
         var session = request.getSession();
         var user = (User) session.getAttribute("user");
+        var priority = new Priority(1, "", 1);
+        task.setPriority(priority);
         task.setUser(user);
-        task.setCreated(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         taskService.create(task);
         return "redirect:/tasks/" + task.getId();
     }
