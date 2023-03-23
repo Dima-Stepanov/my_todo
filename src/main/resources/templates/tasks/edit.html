@@ -61,17 +61,44 @@
             <form th:action="@{/tasks/update}" method="post" th:object="${task}">
                 <input type="hidden" name="id" th:field="*{id}">
                 <input type="hidden" name="created" th:field="*{created}">
-                <input type="hidden" name="priority" th:field="*{priority}">
                 <div class="card-body">
                     <h5 class="card-title" th:text="'Задание № ' + ${task.id}">Задние №</h5>
                     <h6 class="card-subtitle mb-2 text-muted"
-                        th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}">Дата
-                        создания</h6>
+                        th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}">
+                        Дата создания
+                    </h6>
                     <div class="mb-3">
                         <label for="description" class="form-label"><b>Описание</b></label>
                         <textarea class="form-control" rows="3"
                                   id="description" name="description" th:field="*{description}"
                                   placeholder="Введите описание задания"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="coll mb-3">
+                            <label for="priorityId"><b>Приоритет:</b></label>
+                            <select class="from-control"
+                                    th:field="*{priority.id}"
+                                    id="priorityId"
+                                    name="priorityId">
+                                <option th:each="priorityCount : ${priorityList}"
+                                        th:value="${priorityCount.id}"
+                                        th:text="${priorityCount.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="coll mb-3">
+                            <label for="categoriesId"><b>Категории:</b></label>
+                            <select class="from-control"
+                                    id="categoriesId"
+                                    name="categoriesId"
+                                    multiple="multiple">
+                                <option th:each="categoryCount : ${categoryList}"
+                                        th:value="${categoryCount.id}"
+                                        th:text="${categoryCount.name}"
+                                        th:selected="${task.categories.contains(categoryCount)}">
+                                </option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input"

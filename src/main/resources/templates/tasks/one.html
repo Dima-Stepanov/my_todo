@@ -68,7 +68,13 @@
                     class="card-subtitle mb-2 text-danger">Приоритет: CРОЧНО</h6>
                 <h6 th:if="${task.priority.position==2}"
                     class="card-subtitle mb-2 text-success">Приоритет: НОРМАЛЬНО</h6>
-                <p class="card-text" th:text="${task.description}">Описание</p>
+                <!--CATEGORIES TASK-->
+                <h6>Категория:
+                    <span th:each="category : ${task.categories}">
+                        <span th:text="${category.name} + ' '"/>
+                    </span>
+                </h6>
+                <p class="card-text" th:text="'Описание: ' + ${task.description}">Описание:</p>
                 <div th:if="${!task.done}" class="alert alert-primary" role="alert">
                     Задание активно.
                 </div>
