@@ -47,7 +47,8 @@ public class HibernateTaskRepository implements TaskRepository {
         return crudRepository.optional(
                 """
                         FROM Task AS t 
-                        JOIN FETCH t.priority 
+                        JOIN FETCH t.priority AS p 
+                        LEFT JOIN FETCH t.categories AS c
                         WHERE t.id = :taskId
                         """,
                 Task.class,
@@ -88,7 +89,11 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public void setStatusTaskById(int taskId, boolean status) {
         crudRepository.run(
-                "UPDATE Task AS t SET t.done =:status WHERE t.id =:taskId",
+                """
+                        UPDATE Task AS t 
+                        SET t.done =:status 
+                        WHERE t.id =:taskId
+                        """,
                 Map.of("status", status,
                         "taskId", taskId)
         );
@@ -104,9 +109,12 @@ public class HibernateTaskRepository implements TaskRepository {
     public Collection<Task> findAllOrderById() {
         return crudRepository.query(
                 """
+                        SELECT DISTINCT t 
                         FROM Task AS t 
-                        JOIN FETCH t.priority 
-                        ORDER BY t.id ASC""",
+                        JOIN FETCH t.priority AS p
+                        LEFT JOIN FETCH t.categories AS c
+                        ORDER BY t.id ASC
+                        """,
                 Task.class
         );
     }
@@ -121,10 +129,13 @@ public class HibernateTaskRepository implements TaskRepository {
     public Collection<Task> findAllDoneOrderById() {
         return crudRepository.query(
                 """
+                        SELECT DISTINCT t 
                         FROM Task AS t 
-                        JOIN FETCH t.priority 
+                        LEFT JOIN FETCH t.priority AS p 
+                        LEFT JOIN FETCH t.categories AS c 
                         WHERE t.done IS true 
-                        ORDER BY t.id ASC""",
+                        ORDER BY t.id ASC
+                        """,
                 Task.class
         );
     }
@@ -139,10 +150,13 @@ public class HibernateTaskRepository implements TaskRepository {
     public Collection<Task> findAllNewOrderById() {
         return crudRepository.query(
                 """
+                        SELECT DISTINCT t 
                         FROM Task AS t 
-                        JOIN FETCH t.priority 
+                        LEFT JOIN FETCH t.priority AS p 
+                        LEFT JOIN FETCH t.categories AS c 
                         WHERE t.done IS false 
-                        ORDER BY t.id ASC""",
+                        ORDER BY t.id ASC
+                        """,
                 Task.class
         );
     }

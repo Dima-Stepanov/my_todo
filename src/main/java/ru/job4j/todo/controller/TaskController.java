@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.repository.CategoryRepository;
+import ru.job4j.todo.service.CategoryService;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,8 @@ import java.time.temporal.ChronoUnit;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
     /**
      * Отображает вид всеми задачами.
@@ -132,7 +137,11 @@ public class TaskController {
             model.addAttribute("message", "Задание № " + taskId + " не найдено");
             return "statuses/errors/404";
         }
+        var priority = priorityService.findAllPriorityOrderById();
+        var categories = categoryService.findAllCategoryOrderById();
         model.addAttribute("task", taskOptional.get());
+        model.addAttribute("priorityList", priority);
+        model.addAttribute("categoryList", categories);
         return "tasks/edit";
     }
 
@@ -166,7 +175,11 @@ public class TaskController {
      * @return tasks/created page.
      */
     @GetMapping("/create")
-    public String getCreateTask() {
+    public String getCreateTask(Model model) {
+        var priority = priorityService.findAllPriorityOrderById();
+        var categories = categoryService.findAllCategoryOrderById();
+        model.addAttribute("priority", priority);
+        model.addAttribute("categories", categories);
         return "tasks/create";
     }
 

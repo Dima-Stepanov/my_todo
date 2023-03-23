@@ -5,8 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 3. Мидл
@@ -46,11 +46,11 @@ public class Task {
     @JoinColumn(name = "priority_id")
     private Priority priority;
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tasks_categories",
             joinColumns = {@JoinColumn(name = "task_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "category_id", nullable = false)}
     )
-    private List<Category> categories = new ArrayList<>();
+    private Set<Category> categories = new HashSet<>();
 }
