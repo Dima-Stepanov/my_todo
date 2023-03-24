@@ -61,6 +61,7 @@
             <form th:action="@{/tasks/update}" method="post" th:object="${task}">
                 <input type="hidden" name="id" th:field="*{id}">
                 <input type="hidden" name="created" th:field="*{created}">
+                <input type="hidden" name="user" th:field="*{user.id}">
                 <div class="card-body">
                     <h5 class="card-title" th:text="'Задание № ' + ${task.id}">Задние №</h5>
                     <h6 class="card-subtitle mb-2 text-muted"
@@ -74,7 +75,8 @@
                                   placeholder="Введите описание задания"></textarea>
                     </div>
                     <div class="row">
-                        <div class="coll mb-3">
+                        <!--PRIORITY-->
+                        <div class="col mb-3">
                             <label for="priorityId"><b>Приоритет:</b></label>
                             <select class="from-control"
                                     th:field="*{priority.id}"
@@ -86,11 +88,12 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="coll mb-3">
-                            <label for="categories"><b>Категории:</b></label>
+                        <!--CATEGORIES-->
+                        <div class="col mb-3">
+                            <label for="categoryId"><b>Категории:</b></label>
                             <select class="from-control"
-                                    id="categories"
-                                    name="categories"
+                                    id="categoryId"
+                                    name="categoryId"
                                     size="5"
                                     multiple="multiple">
                                 <option th:each="categoryCount : ${categoryList}"
@@ -101,6 +104,7 @@
                             </select>
                         </div>
                     </div>
+                    <!--DONE CHECKBOX true/false-->
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input"
                                id="done" name="done" th:field="*{done}">

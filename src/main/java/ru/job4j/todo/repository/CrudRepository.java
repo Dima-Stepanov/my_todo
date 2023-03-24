@@ -1,6 +1,7 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -33,6 +34,7 @@ import java.util.function.Function;
  */
 @AllArgsConstructor
 @Component
+@Slf4j
 public class CrudRepository {
     private final SessionFactory sessionFactory;
 
@@ -102,7 +104,9 @@ public class CrudRepository {
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
+                log.warn("Transaction is rollback: {}", transaction.getStatus());
             }
+            log.error("Error operation: {}", e.getMessage());
             throw e;
         } finally {
             session.close();

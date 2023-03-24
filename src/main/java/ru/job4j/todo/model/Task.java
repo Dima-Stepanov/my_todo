@@ -49,8 +49,8 @@ public class Task {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tasks_categories",
-            joinColumns = {@JoinColumn(name = "task_id", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "category_id", nullable = false)}
+            joinColumns = {@JoinColumn(name = "task_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private Set<Category> categories = new HashSet<>();
 }

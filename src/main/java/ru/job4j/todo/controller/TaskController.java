@@ -4,18 +4,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
-import ru.job4j.todo.repository.CategoryRepository;
 import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * 3. Мидл
@@ -154,12 +153,12 @@ public class TaskController {
      */
     @PostMapping("/update")
     public String postUpdateTask(@ModelAttribute Task task,
+                                 @RequestParam(required = false) Set<Integer> categoryId,
                                  Model model,
                                  HttpServletRequest request) {
-        var session = request.getSession();
-        var user = (User) session.getAttribute("user");
-        task.setUser(user);
-        var isUpdate = taskService.update(task);
+        var pri = request.getParameterValues("priorityId");
+        var cat = request.getParameterValues("categoryId");
+        var isUpdate = taskService.update(task, categoryId);
         if (!isUpdate) {
             model.addAttribute("message", "Задание № "
                                           + task.getId()
@@ -178,8 +177,8 @@ public class TaskController {
     public String getCreateTask(Model model) {
         var priority = priorityService.findAllPriorityOrderById();
         var categories = categoryService.findAllCategoryOrderById();
-        model.addAttribute("priority", priority);
-        model.addAttribute("categories", categories);
+        model.addAttribute("priorityList", priority);
+        model.addAttribute("categoryList", categories);
         return "tasks/create";
     }
 
@@ -191,13 +190,13 @@ public class TaskController {
      */
     @PostMapping("/create")
     public String postCreateTask(@ModelAttribute Task task,
+                                 @RequestParam(required = false) Set<Integer> categoryId,
+                                 @RequestParam int priorityId,
                                  HttpServletRequest request) {
         var session = request.getSession();
         var user = (User) session.getAttribute("user");
-        var priority = new Priority(1, "", 1);
-        task.setPriority(priority);
         task.setUser(user);
-        taskService.create(task);
+        taskService.create(task, categoryId, priorityId);
         return "redirect:/tasks/" + task.getId();
     }
 }

@@ -66,12 +66,41 @@
                                id="description" name="description"
                                   placeholder="Введите описание задания"></textarea>
                     </div>
+                    <div class="row">
+                        <!--PRIORITY-->
+                        <div class="col mb-3">
+                            <label for="priorityId"><b>Приоритет:</b></label>
+                            <select class="from-control"
+                                    id="priorityId"
+                                    name="priorityId">
+                                <option th:each="priorityCount : ${priorityList}"
+                                        th:value="${priorityCount.id}"
+                                        th:text="${priorityCount.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <!--CATEGORIES-->
+                        <div class="col mb-3">
+                            <label for="categoryId"><b>Категории:</b></label>
+                            <select class="from-control"
+                                    id="categoryId"
+                                    name="categoryId"
+                                    size="5"
+                                    multiple="multiple">
+                                <option th:each="categoryCount : ${categoryList}"
+                                        th:value="${categoryCount.id}"
+                                        th:text="${categoryCount.name}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--DONE CHECKBOX true/false-->
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input"
                                id="done" name="done">
                         <label class="form-check-label" for="done">Выполнено</label>
                     </div>
-                    <!--Выполнено, Отредактировать, Удалить.-->
+                    <!--Отмена, Сохранить.-->
                     <a class="btn btn-secondary"
                        th:href="@{/tasks}">Отмена</a>
                     <button class="btn btn-success" type="submit">Сохранить</button>

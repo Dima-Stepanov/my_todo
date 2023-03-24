@@ -20,7 +20,6 @@ import java.util.Optional;
  */
 @Service
 @AllArgsConstructor
-@Slf4j
 public class SimpleUserRepository implements UserService {
     private final UserRepository userRepository;
 
@@ -31,7 +30,7 @@ public class SimpleUserRepository implements UserService {
             userRepository.create(user);
             result = Optional.of(user);
         } catch (Exception e) {
-            log.error("User {} create error: {}", user, e.toString());
+            e.printStackTrace();
         }
         return result;
     }
@@ -47,7 +46,7 @@ public class SimpleUserRepository implements UserService {
             userRepository.update(user);
             return true;
         } catch (Exception e) {
-            log.error("User {} update error: {}", user, e.toString());
+            e.printStackTrace();
         }
         return false;
     }
@@ -58,7 +57,7 @@ public class SimpleUserRepository implements UserService {
             userRepository.delete(userId);
             return true;
         } catch (Exception e) {
-            log.error("Delete user ID:{} error {}", userId, e.toString());
+            e.printStackTrace();
         }
         return false;
     }

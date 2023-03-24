@@ -3,11 +3,13 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * 3. Мидл
@@ -21,12 +23,12 @@ import java.util.Optional;
  */
 @Service
 @AllArgsConstructor
-@Slf4j
 public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
 
     @Override
-    public Task create(Task task) {
+    public Task create(Task task, Set<Integer> categoryId, int priorityId) {
+        setPriorityCategories(task, categoryId, priorityId);
         return taskRepository.create(task);
     }
 
@@ -36,12 +38,12 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public boolean update(Task task) {
+    public boolean update(Task task, Set<Integer> categoryId) {
+        setCategories(task, categoryId);
         try {
             taskRepository.update(task);
             return true;
         } catch (Exception e) {
-            log.error("UPDATE Task ID:{} is ERROR {}", task.getId(), e.toString());
             e.printStackTrace();
             return false;
         }
