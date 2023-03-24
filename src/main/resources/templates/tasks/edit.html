@@ -87,10 +87,11 @@
                             </select>
                         </div>
                         <div class="coll mb-3">
-                            <label for="categoriesId"><b>Категории:</b></label>
+                            <label for="categories"><b>Категории:</b></label>
                             <select class="from-control"
-                                    id="categoriesId"
-                                    name="categoriesId"
+                                    id="categories"
+                                    name="categories"
+                                    size="5"
                                     multiple="multiple">
                                 <option th:each="categoryCount : ${categoryList}"
                                         th:value="${categoryCount.id}"
