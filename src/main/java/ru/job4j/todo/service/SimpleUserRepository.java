@@ -3,10 +3,16 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.UserRepository;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 /**
  * 3. Мидл
@@ -20,6 +26,7 @@ import java.util.Optional;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class SimpleUserRepository implements UserService {
     private final UserRepository userRepository;
 
@@ -65,5 +72,12 @@ public class SimpleUserRepository implements UserService {
     @Override
     public Optional<User> findUserByEmailAndPassword(String email, String password) {
         return userRepository.findUserByEmailAndPassword(email, password);
+    }
+
+    @Override
+    public Collection<TimeZone> getAllTimeZone() {
+        return ZoneId.getAvailableZoneIds()
+                .stream().map(TimeZone::getTimeZone)
+                .collect(Collectors.toList());
     }
 }

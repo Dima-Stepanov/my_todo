@@ -7,9 +7,13 @@ import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * 3. Мидл
@@ -23,6 +27,7 @@ import java.util.Set;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
 
@@ -34,6 +39,8 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public Optional<Task> findTaskById(int taskId) {
+        var task = taskRepository.findTaskById(taskId);
+        task.ifPresent(this::setTimeZone);
         return taskRepository.findTaskById(taskId);
     }
 
@@ -84,5 +91,13 @@ public class SimpleTaskService implements TaskService {
     @Override
     public Collection<Task> findAllNewOrderById() {
         return taskRepository.findAllNewOrderById();
+    }
+
+    private void setTimeZone(Task task) {
+        log.info("Time in DB {}", task.getCreated());
+        var time = task.getCreated().atZone(
+                ZoneId.systemDefault().normalized()
+        ).withZoneSameInstant(ZoneId.of("UTC+9")).toLocalDateTime();
+        log.info("Date of zone {}", time);
     }
 }

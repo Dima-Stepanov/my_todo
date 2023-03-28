@@ -2,7 +2,9 @@ package ru.job4j.todo.service;
 
 import ru.job4j.todo.model.User;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.TimeZone;
 
 /**
  * 3. Мидл
@@ -24,4 +26,6 @@ public interface UserService {
     boolean delete(int userId);
 
     Optional<User> findUserByEmailAndPassword(String email, String password);
+
+    Collection<TimeZone> getAllTimeZone();
 }
