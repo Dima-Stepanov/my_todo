@@ -96,8 +96,8 @@ public class SimpleTaskService implements TaskService {
     private void setTimeZone(Task task) {
         log.info("Time in DB {}", task.getCreated());
         var time = task.getCreated().atZone(
-                ZoneId.systemDefault().normalized()
-        ).withZoneSameInstant(ZoneId.of("UTC+9")).toLocalDateTime();
+                ZoneOffset.systemDefault()
+        ).withZoneSameInstant(ZoneId.of("UTC+3")).toLocalDateTime();
         log.info("Date of zone {}", time);
     }
 }

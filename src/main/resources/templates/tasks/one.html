@@ -63,7 +63,7 @@
                 <h6 class="card-subtitle mb-2 text-muted"
                     th:text="'Создал: ' + ${task.user.name}">Пользователь</h6>
                 <h6 class="card-subtitle mb-2 text-muted"
-                    th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm:ss')}">Дата создания</h6>
+                    th:text="'Создана: ' + ${#temporals.format(task.created, 'dd-MM-yyyy HH:mm zzz')}">Дата создания</h6>
                 <h6 th:if="${task.priority.position==1}"
                     class="card-subtitle mb-2 text-danger">Приоритет: CРОЧНО</h6>
                 <h6 th:if="${task.priority.position==2}"

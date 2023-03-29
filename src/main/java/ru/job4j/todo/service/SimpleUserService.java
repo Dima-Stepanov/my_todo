@@ -3,12 +3,10 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.UserRepository;
 
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
  * 3.3. HibernateТема
  * 3.3.2. Конфигурирование
  * 4. TODO list
- * SimpleUserRepository реализация бизнес логики обработки модели User
+ * SimpleUserService реализация бизнес логики обработки модели User
  *
  * @author Dmitry Stepanov, user Dima_Nout
  * @since 20.03.2023
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class SimpleUserRepository implements UserService {
+public class SimpleUserService implements UserService {
     private final UserRepository userRepository;
 
     @Override
