@@ -65,7 +65,8 @@ public class UserController {
 
 
     @GetMapping("/register")
-    public String gerRegister() {
+    public String gerRegister(Model model) {
+        model.addAttribute("timeZones", userService.getAllTimeZoneGMT());
         return "users/register";
     }
 

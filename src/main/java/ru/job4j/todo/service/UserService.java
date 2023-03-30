@@ -1,6 +1,7 @@
 package ru.job4j.todo.service;
 
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.model.dto.TimeZoneDto;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -27,5 +28,5 @@ public interface UserService {
 
     Optional<User> findUserByEmailAndPassword(String email, String password);
 
-    Collection<TimeZone> getAllTimeZone();
+    Collection<String> getAllTimeZoneGMT();
 }

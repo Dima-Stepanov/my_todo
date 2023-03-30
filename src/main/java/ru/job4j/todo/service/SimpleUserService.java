@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.model.dto.TimeZoneDto;
 import ru.job4j.todo.repository.UserRepository;
 
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -72,10 +71,20 @@ public class SimpleUserService implements UserService {
         return userRepository.findUserByEmailAndPassword(email, password);
     }
 
+    /**
+     * Метод возвращает коллекцию часовых зон в формате GMT.
+     * Всего 27 шт.
+     * TimeZoneDTO модель содержит ID зоны и его описание.
+     *
+     * @return Collection
+     */
     @Override
-    public Collection<TimeZone> getAllTimeZone() {
+    public Collection<String> getAllTimeZoneGMT() {
+        var gmt = "GMT";
         return ZoneId.getAvailableZoneIds()
-                .stream().map(TimeZone::getTimeZone)
-                .collect(Collectors.toList());
+                .stream()
+                .filter(s -> s.contains(gmt))
+                .sorted()
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

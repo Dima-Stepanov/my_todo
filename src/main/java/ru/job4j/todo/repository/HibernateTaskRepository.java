@@ -47,6 +47,7 @@ public class HibernateTaskRepository implements TaskRepository {
         return crudRepository.optional(
                 """
                         FROM Task AS t 
+                        JOIN FETCH t.user AS u
                         JOIN FETCH t.priority AS p 
                         LEFT JOIN FETCH t.categories AS c
                         WHERE t.id = :taskId

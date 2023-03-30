@@ -7,6 +7,7 @@ import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +31,7 @@ import java.util.TimeZone;
 @Slf4j
 public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
+    private final ZoneId systemZoneId = TimeZone.getDefault().toZoneId();
 
     @Override
     public Task create(Task task, Set<Integer> categoryId, int priorityId) {
@@ -39,8 +41,15 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public Optional<Task> findTaskById(int taskId) {
-        var task = taskRepository.findTaskById(taskId);
-        task.ifPresent(this::setTimeZone);
+        var taskOptional = taskRepository.findTaskById(taskId);
+        if (taskOptional.isPresent()) {
+            var timeByZone = setTimeZone(taskOptional.get().getCreated(),
+                    systemZoneId,
+                   TimeZone.getTimeZone(taskOptional.get().getUser().getTimeZone())
+                           .toZoneId()
+            );
+            taskOptional.get().setCreated(timeByZone);
+        }
         return taskRepository.findTaskById(taskId);
     }
 
@@ -93,11 +102,21 @@ public class SimpleTaskService implements TaskService {
         return taskRepository.findAllNewOrderById();
     }
 
-    private void setTimeZone(Task task) {
-        log.info("Time in DB {}", task.getCreated());
-        var time = task.getCreated().atZone(
-                ZoneOffset.systemDefault()
-        ).withZoneSameInstant(ZoneId.of("UTC+3")).toLocalDateTime();
-        log.info("Date of zone {}", time);
+    /**
+     * Метод приводит Дату время относительно системного часового пояса,
+     * к часовому поясу пользователя
+     *
+     * @param dateTime   Edit LocalDateTime
+     * @param systemZone current ZoneID
+     * @param userZone   user ZoneID
+     * @return dateTimeZone LocalDateTimeZone
+     */
+    private LocalDateTime setTimeZone(LocalDateTime dateTime, ZoneId systemZone, ZoneId userZone) {
+        log.info("Time of ZoneID default: {}", dateTime);
+        var dateTimeZone = dateTime.atZone(
+                systemZone
+        ).withZoneSameInstant(userZone).toLocalDateTime();
+        log.info("Date of ZoneID User: {}", dateTimeZone);
+        return dateTimeZone;
     }
 }
