@@ -13,6 +13,7 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Set;
 
@@ -41,8 +42,9 @@ public class TaskController {
      * @return allTasks.html
      */
     @GetMapping()
-    public String getAllTasks(Model model) {
-        var allTasks = taskService.findAllOrderById();
+    public String getAllTasks(Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        var allTasks = taskService.findAllOrderById(user.getTimeZone());
         model.addAttribute("tasksList", allTasks);
         return "tasks/allTasks";
     }
@@ -54,8 +56,10 @@ public class TaskController {
      * @return doneTasks.html
      */
     @GetMapping("/done")
-    public String getAllDoneTasks(Model model) {
-        var doneTasks = taskService.findAllDoneOrderById();
+    public String getAllDoneTasks(Model model,
+                                  HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        var doneTasks = taskService.findAllDoneOrderById(user.getTimeZone());
         model.addAttribute("doneTasks", doneTasks);
         return "tasks/doneTasks";
     }
@@ -67,8 +71,10 @@ public class TaskController {
      * @return doneTasks.html
      */
     @GetMapping("/new")
-    public String getAllNewTasks(Model model) {
-        var newTasks = taskService.findAllNewOrderById();
+    public String getAllNewTasks(Model model,
+                                 HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        var newTasks = taskService.findAllNewOrderById(user.getTimeZone());
         model.addAttribute("newTasks", newTasks);
         return "tasks/newTasks";
     }
@@ -77,8 +83,11 @@ public class TaskController {
      * Отображает вид одно задание по id
      */
     @GetMapping("{taskId}")
-    public String getOneTask(@PathVariable int taskId, Model model) {
-        var taskOptional = taskService.findTaskById(taskId);
+    public String getOneTask(@PathVariable int taskId,
+                             Model model,
+                             HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        var taskOptional = taskService.findTaskById(taskId, user.getTimeZone());
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задание № " + taskId + " не найдено");
             return "statuses/errors/404";
@@ -130,8 +139,9 @@ public class TaskController {
      * @return Page tasks/edit or errors page
      */
     @GetMapping("/edit/{taskId}")
-    public String getEditTask(@PathVariable int taskId, Model model) {
-        var taskOptional = taskService.findTaskById(taskId);
+    public String getEditTask(@PathVariable int taskId, Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        var taskOptional = taskService.findTaskById(taskId, user.getTimeZone());
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задание № " + taskId + " не найдено");
             return "statuses/errors/404";

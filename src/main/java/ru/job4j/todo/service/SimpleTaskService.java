@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 /**
  * 3. Мидл
@@ -31,7 +32,7 @@ import java.util.TimeZone;
 @Slf4j
 public class SimpleTaskService implements TaskService {
     private final TaskRepository taskRepository;
-    private final ZoneId systemZoneId = TimeZone.getDefault().toZoneId();
+    private final String systemZoneId = TimeZone.getDefault().getID();
 
     @Override
     public Task create(Task task, Set<Integer> categoryId, int priorityId) {
@@ -40,17 +41,16 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Optional<Task> findTaskById(int taskId) {
+    public Optional<Task> findTaskById(int taskId, String userTimeZone) {
         var taskOptional = taskRepository.findTaskById(taskId);
         if (taskOptional.isPresent()) {
             var timeByZone = setTimeZone(taskOptional.get().getCreated(),
                     systemZoneId,
-                   TimeZone.getTimeZone(taskOptional.get().getUser().getTimeZone())
-                           .toZoneId()
+                    userTimeZone
             );
             taskOptional.get().setCreated(timeByZone);
         }
-        return taskRepository.findTaskById(taskId);
+        return taskOptional;
     }
 
     @Override
@@ -88,35 +88,61 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Collection<Task> findAllOrderById() {
-        return taskRepository.findAllOrderById();
+    public Collection<Task> findAllOrderById(String userZoneId) {
+        return setTimeZone(
+                taskRepository.findAllOrderById(),
+                systemZoneId,
+                userZoneId);
     }
 
     @Override
-    public Collection<Task> findAllDoneOrderById() {
-        return taskRepository.findAllDoneOrderById();
+    public Collection<Task> findAllDoneOrderById(String userZoneId) {
+        return setTimeZone(
+                taskRepository.findAllDoneOrderById(),
+                systemZoneId,
+                userZoneId);
     }
 
     @Override
-    public Collection<Task> findAllNewOrderById() {
-        return taskRepository.findAllNewOrderById();
+    public Collection<Task> findAllNewOrderById(String userZoneId) {
+        return setTimeZone(
+                taskRepository.findAllNewOrderById(),
+                systemZoneId,
+                userZoneId);
     }
 
     /**
      * Метод приводит Дату время относительно системного часового пояса,
      * к часовому поясу пользователя
      *
-     * @param dateTime   Edit LocalDateTime
-     * @param systemZone current ZoneID
-     * @param userZone   user ZoneID
-     * @return dateTimeZone LocalDateTimeZone
+     * @param dateTime     LocalDateTime
+     * @param systemZoneId System zone ID
+     * @param userTimeZone User zone ID
+     * @return LocalDateTime to User zone ID
      */
-    private LocalDateTime setTimeZone(LocalDateTime dateTime, ZoneId systemZone, ZoneId userZone) {
-        log.info("Time of ZoneID default: {}", dateTime);
-        var dateTimeZone = dateTime.atZone(
-                systemZone
-        ).withZoneSameInstant(userZone).toLocalDateTime();
+    private LocalDateTime setTimeZone(LocalDateTime dateTime, String systemZoneId, String userTimeZone) {
+        log.info("Date of ZoneID User: {}", dateTime);
+        if (userTimeZone.isEmpty()) {
+            userTimeZone = systemZoneId;
+        }
+        var dateTimeZone = dateTime
+                .atZone(ZoneId.of(systemZoneId))
+                .withZoneSameInstant(ZoneId.of(userTimeZone));
         log.info("Date of ZoneID User: {}", dateTimeZone);
-        return dateTimeZone;
+        return dateTimeZone.toLocalDateTime();
+    }
+
+    /**
+     * Метод изменяет коллекцию заданий, приводя дату время к часовому пользователю
+     *
+     * @param tasks        Collection Task
+     * @param systemZoneId String
+     * @param userTimeZone String
+     * @return Collection task
+     */
+    private Collection<Task> setTimeZone(Collection<Task> tasks, String systemZoneId, String userTimeZone) {
+        return tasks.stream()
+                .peek(task -> task.setCreated(setTimeZone(task.getCreated(), systemZoneId, userTimeZone)))
+                .collect(Collectors.toList());
     }
 }

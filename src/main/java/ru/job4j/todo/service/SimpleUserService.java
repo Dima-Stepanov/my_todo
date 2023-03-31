@@ -72,19 +72,15 @@ public class SimpleUserService implements UserService {
     }
 
     /**
-     * Метод возвращает коллекцию часовых зон в формате GMT.
-     * Всего 27 шт.
-     * TimeZoneDTO модель содержит ID зоны и его описание.
+     * Метод возвращает коллекцию часовых зон в формате
      *
      * @return Collection
      */
     @Override
-    public Collection<String> getAllTimeZoneGMT() {
-        var gmt = "GMT";
+    public Collection<TimeZone> getAllTimeZoneGMT() {
         return ZoneId.getAvailableZoneIds()
                 .stream()
-                .filter(s -> s.contains(gmt))
-                .sorted()
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .map(TimeZone::getTimeZone)
+                .collect(Collectors.toList());
     }
 }

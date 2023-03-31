@@ -46,8 +46,8 @@
                     <label for="timeZone"><b>Часовой пояс: </b></label>
                     <select class="from-control" id="timeZone" name="timeZone">
                         <option th:each="zone : ${timeZones}"
-                                th:value="${zone}"
-                                th:text="${zone}">
+                                th:value="${zone.getID()}"
+                                th:text="${zone.getDisplayName()}">
                         </option>
                     </select>
                 </div>

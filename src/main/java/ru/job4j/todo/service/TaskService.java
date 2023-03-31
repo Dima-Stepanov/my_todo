@@ -24,7 +24,7 @@ public interface TaskService {
 
     Task create(Task task, Set<Integer> categoryId, int priorityId);
 
-    Optional<Task> findTaskById(int taskId);
+    Optional<Task> findTaskById(int taskId, String userTimeZone);
 
     boolean update(Task task, Set<Integer> categoryId);
 
@@ -32,11 +32,11 @@ public interface TaskService {
 
     boolean setStatusTaskById(int taskId, boolean status);
 
-    Collection<Task> findAllOrderById();
+    Collection<Task> findAllOrderById(String userZoneId);
 
-    Collection<Task> findAllDoneOrderById();
+    Collection<Task> findAllDoneOrderById(String userZoneId);
 
-    Collection<Task> findAllNewOrderById();
+    Collection<Task> findAllNewOrderById(String userZoneId);
 
     /**
      * Метод устанавливает значение categories

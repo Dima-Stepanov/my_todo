@@ -28,5 +28,5 @@ public interface UserService {
 
     Optional<User> findUserByEmailAndPassword(String email, String password);
 
-    Collection<String> getAllTimeZoneGMT();
+    Collection<TimeZone> getAllTimeZoneGMT();
 }
