@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.TimeZone;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -31,25 +29,23 @@ class SimpleTaskServiceTest {
     }
 
     @Test
-    public void testZoneID() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        System.out.println(ZoneOffset.UTC.getId());
-        System.out.println(ZoneId.systemDefault().normalized().getId());
-        System.out.println(ZoneId.of("UTC").getId());
-        System.out.println(TimeZone.getDefault().getID());
-        System.out.println(TimeZone.getTimeZone("UTC").getID());
+    public void whenZoneIdSetUTCPlus2ThenReturnTimePlus2H() {
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 3, 31, 10, 0);
+        var defTZ = TimeZone.getDefault().getID();
+        var p2TZ = TimeZone.getTimeZone("Europe/Paris").getID();
+        var expected = LocalDateTime.of(2023, 3, 31, 9, 0);
+        var result = taskService.setTimeZone(localDateTime, defTZ, p2TZ);
+        assertThat(result).isEqualToIgnoringSeconds(expected);
+    }
 
-        System.out.println(localDateTime);
-
-        System.out.println(
-                localDateTime.atZone(ZoneId.systemDefault())
-                        .withZoneSameInstant(ZoneId.of("UTC"))
-        );
-
-        System.out.println(
-                localDateTime.atZone(TimeZone.getDefault().toZoneId())
-                        .withZoneSameInstant(ZoneId.of("UTC+9"))
-        );
+    @Test
+    public  void whenZoneIdPlus9setDefaultThenReturnTimeZoneDefault() {
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 3, 31, 19, 0);
+        var defTZ = TimeZone.getDefault().getID();
+        var p9TZ = TimeZone.getTimeZone("Asia/Tokyo").getID();
+        var expected = LocalDateTime.of(2023, 3, 31, 13, 0);
+        var result = taskService.setTimeZone(localDateTime, p9TZ, defTZ);
+        assertThat(result).isEqualToIgnoringSeconds(expected);
     }
 
 }

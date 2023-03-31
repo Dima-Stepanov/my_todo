@@ -4,17 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.job4j.todo.model.Category;
-import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -165,14 +161,13 @@ public class TaskController {
     public String postUpdateTask(@ModelAttribute Task task,
                                  @RequestParam(required = false) Set<Integer> categoryId,
                                  Model model,
-                                 HttpServletRequest request) {
-        var pri = request.getParameterValues("priorityId");
-        var cat = request.getParameterValues("categoryId");
-        var isUpdate = taskService.update(task, categoryId);
+                                 HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        var isUpdate = taskService.update(task, categoryId, user.getTimeZone());
         if (!isUpdate) {
             model.addAttribute("message", "Задание № "
-                                          + task.getId()
-                                          + " не изменено");
+                    + task.getId()
+                    + " не изменено");
             return "statuses/errors/404";
         }
         return "redirect:/tasks/" + task.getId();
@@ -202,8 +197,7 @@ public class TaskController {
     public String postCreateTask(@ModelAttribute Task task,
                                  @RequestParam(required = false) Set<Integer> categoryId,
                                  @RequestParam int priorityId,
-                                 HttpServletRequest request) {
-        var session = request.getSession();
+                                 HttpSession session) {
         var user = (User) session.getAttribute("user");
         task.setUser(user);
         taskService.create(task, categoryId, priorityId);

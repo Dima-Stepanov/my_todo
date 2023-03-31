@@ -26,7 +26,7 @@ public interface TaskService {
 
     Optional<Task> findTaskById(int taskId, String userTimeZone);
 
-    boolean update(Task task, Set<Integer> categoryId);
+    boolean update(Task task, Set<Integer> categoryId, String userTimeZone);
 
     boolean delete(int taskId);
 
@@ -58,7 +58,6 @@ public interface TaskService {
     }
 
     default Task setPriorityCategories(Task task, Set<Integer> categoryId, int priorityId) {
-        Set<Category> categories = new HashSet<>();
         setCategories(task, categoryId);
         if (priorityId > 0) {
             task.setPriority(new Priority(priorityId, null, priorityId));

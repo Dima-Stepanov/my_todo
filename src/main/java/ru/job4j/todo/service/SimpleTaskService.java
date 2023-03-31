@@ -3,14 +3,11 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -54,7 +51,14 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public boolean update(Task task, Set<Integer> categoryId) {
+    public boolean update(Task task, Set<Integer> categoryId, String userTimeZone) {
+        task.setCreated(
+                setTimeZone(
+                        task.getCreated(),
+                        userTimeZone,
+                        systemZoneId
+                        )
+        );
         setCategories(task, categoryId);
         try {
             taskRepository.update(task);
@@ -120,15 +124,13 @@ public class SimpleTaskService implements TaskService {
      * @param userTimeZone User zone ID
      * @return LocalDateTime to User zone ID
      */
-    private LocalDateTime setTimeZone(LocalDateTime dateTime, String systemZoneId, String userTimeZone) {
-        log.info("Date of ZoneID User: {}", dateTime);
+    public LocalDateTime setTimeZone(LocalDateTime dateTime, String systemZoneId, String userTimeZone) {
         if (userTimeZone.isEmpty()) {
             userTimeZone = systemZoneId;
         }
         var dateTimeZone = dateTime
                 .atZone(ZoneId.of(systemZoneId))
                 .withZoneSameInstant(ZoneId.of(userTimeZone));
-        log.info("Date of ZoneID User: {}", dateTimeZone);
         return dateTimeZone.toLocalDateTime();
     }
 
@@ -140,7 +142,7 @@ public class SimpleTaskService implements TaskService {
      * @param userTimeZone String
      * @return Collection task
      */
-    private Collection<Task> setTimeZone(Collection<Task> tasks, String systemZoneId, String userTimeZone) {
+    public Collection<Task> setTimeZone(Collection<Task> tasks, String systemZoneId, String userTimeZone) {
         return tasks.stream()
                 .peek(task -> task.setCreated(setTimeZone(task.getCreated(), systemZoneId, userTimeZone)))
                 .collect(Collectors.toList());
