@@ -47,7 +47,7 @@ public class HibernatePriorityRepository implements PriorityRepository {
     @Override
     public Collection<Priority> findAllPriorityOrderByPosition() {
         return crudRepository.query(
-                "from Priority order by id asc",
+                "from Priority as p order by p.position asc",
                 Priority.class
         );
     }
