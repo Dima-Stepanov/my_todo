@@ -51,5 +51,5 @@ JDK 17, Maven 3.8, PostgreSQL 14. <br>
 
 <h3>Контакты</h3>
 email: <b>haoos@inbox.ru</b> <br>
-tl: https://t.me/Dima202020
+tl: <a href=https://t.me/Dima202020><b>Dima202020<b></a> <br>
 github.com: <a href=https://github.com/Dima-Stepanov><b>Dima-Stepanov<b></a>
