@@ -54,8 +54,8 @@ public class SimpleTaskService implements TaskService {
         task.setCreated(
                 setTimeZone(
                         task.getCreated(),
-                        userTimeZone,
-                        systemZoneId
+                        systemZoneId,
+                        userTimeZone
                 )
         );
         setCategories(task, categoryId);

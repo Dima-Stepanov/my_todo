@@ -1,10 +1,7 @@
 package ru.job4j.todo.repository;
 
 import org.hibernate.SessionFactory;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.job4j.todo.configuration.HibernateConfiguration;
 import ru.job4j.todo.model.Category;
 
@@ -30,16 +27,27 @@ class HibernateCategoryRepositoryTest {
 
     private static void delete() {
         var crud = new CrudRepository(sf);
+        crud.run("delete from Task as t where t.id >:tId",
+                Map.of("tId", 0));
+        crud.run("delete from Priority as p where p.id >:pId",
+                Map.of("pId", 0));
         crud.run("delete from Category as c where c.id >:cId",
                 Map.of("cId", 0));
+        crud.run("delete from User as u where u.id >:uId",
+                Map.of("uId", 0));
     }
 
 
     @BeforeAll
     public static void initRepository() {
-        sf = new HibernateConfiguration().getSessionFactory();
+        sf = HibernateConfigurationFromTest.getSFFromTest();
         var crud = new CrudRepository(sf);
         categoryRepository = new HibernateCategoryRepository(crud);
+    }
+
+    @AfterAll
+    static void closeSF() {
+        sf.close();
     }
 
     @BeforeEach

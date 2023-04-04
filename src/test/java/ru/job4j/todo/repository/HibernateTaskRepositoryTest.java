@@ -44,13 +44,13 @@ class HibernateTaskRepositoryTest {
 
     @BeforeAll
     public static void initRepository() {
-        sf = new HibernateConfiguration().getSessionFactory();
+        sf = HibernateConfigurationFromTest.getSFFromTest();
         var crud = new CrudRepository(sf);
         taskRepository = new HibernateTaskRepository(crud);
     }
 
     @AfterAll
-    public static void closeResource() {
+    public static void closeSF() {
         sf.close();
     }
 

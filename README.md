@@ -43,11 +43,45 @@ JDK 17, Maven 3.8, PostgreSQL 14. <br>
 
 <h3>Взаимодействие с приложением</h3>
 
+![01_login.jpg](img%2F01_login.jpg) <br>
 
+Рисунок 1. Страница авторизации пользователя <br>
 
+![02_register.jpg](img%2F02_register.jpg) <br>
 
+Рисунок 2. Страница регистрации пользователя <br>
 
+![03_index.jpg](img%2F03_index.jpg) <br>
 
+Рисунок 3. Главная страница приложения <br>
+
+![04_all_task.jpg](img%2F04_all_task.jpg) <br>
+
+Рисунок 4. Страница отображения всех задач <br>
+
+![05_done_task.jpg](img%2F05_done_task.jpg) <br>
+
+Рисунок 5. Страница отображения завершенных задач <br>
+
+![06_new_task.jpg](img%2F06_new_task.jpg) <br>
+
+Рисунок 6. Страница отображения новых задач (не завершенных) <br>
+
+![07_create_task.jpg](img%2F07_create_task.jpg) <br>
+
+Рисунок 7. Страница создания новой задачи <br>
+
+![08_one_task.jpg](img%2F08_one_task.jpg) <br>
+
+Рисунок 8. Страница отображения деталей выбранной задачи <br>
+
+![09_edit_task.jpg](img%2F09_edit_task.jpg) <br>
+
+Рисунок 9. Страница редактирования задачи <br>
+
+![10_error_page.jpg](img%2F10_error_page.jpg) <br>
+
+Рисунок 10. Страница ошибки <br>
 
 <h3>Контакты</h3>
 email: <b>haoos@inbox.ru</b> <br>

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.TimeZone;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -33,7 +34,10 @@ class SimpleTaskServiceTest {
         LocalDateTime localDateTime = LocalDateTime.of(2023, 3, 31, 10, 0);
         var defTZ = TimeZone.getDefault().getID();
         var p2TZ = TimeZone.getTimeZone("Europe/Paris").getID();
-        var expected = LocalDateTime.of(2023, 3, 31, 9, 0);
+        var expected = localDateTime
+                .atZone(ZoneId.of(defTZ))
+                .withZoneSameInstant(ZoneId.of(p2TZ))
+                .toLocalDateTime();
         var result = taskService.setTimeZone(localDateTime, defTZ, p2TZ);
         assertThat(result).isEqualToIgnoringSeconds(expected);
     }
@@ -43,7 +47,10 @@ class SimpleTaskServiceTest {
         LocalDateTime localDateTime = LocalDateTime.of(2023, 3, 31, 19, 0);
         var defTZ = TimeZone.getDefault().getID();
         var p9TZ = TimeZone.getTimeZone("Asia/Tokyo").getID();
-        var expected = LocalDateTime.of(2023, 3, 31, 13, 0);
+        var expected = localDateTime
+                .atZone(ZoneId.of(p9TZ))
+                .withZoneSameInstant(ZoneId.of(defTZ))
+                .toLocalDateTime();
         var result = taskService.setTimeZone(localDateTime, p9TZ, defTZ);
         assertThat(result).isEqualToIgnoringSeconds(expected);
     }

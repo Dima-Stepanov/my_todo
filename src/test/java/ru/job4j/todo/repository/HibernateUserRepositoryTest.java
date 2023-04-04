@@ -26,13 +26,19 @@ class HibernateUserRepositoryTest {
 
     private static void deleteUsers() {
         var crud = new CrudRepository(sf);
-        crud.run("delete from User as u where u.id >: uId",
+        crud.run("delete from Task as t where t.id >:tId",
+                Map.of("tId", 0));
+        crud.run("delete from Priority as p where p.id >:pId",
+                Map.of("pId", 0));
+        crud.run("delete from Category as c where c.id >:cId",
+                Map.of("cId", 0));
+        crud.run("delete from User as u where u.id >:uId",
                 Map.of("uId", 0));
     }
 
     @BeforeAll
     public static void initRepository() {
-        sf = new HibernateConfiguration().getSessionFactory();
+        sf = HibernateConfigurationFromTest.getSFFromTest();
         var crud = new CrudRepository(sf);
         userRepository = new HibernateUserRepository(crud);
     }

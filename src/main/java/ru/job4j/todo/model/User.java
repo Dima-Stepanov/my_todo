@@ -28,7 +28,9 @@ public class User {
     @EqualsAndHashCode.Include
     private int id;
     private String name;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
     @Column(name = "user_zone")
     private String timeZone;
