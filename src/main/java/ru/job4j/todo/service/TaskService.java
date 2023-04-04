@@ -1,14 +1,10 @@
 package ru.job4j.todo.service;
 
-import ru.job4j.todo.model.Category;
-import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 3. Мидл
@@ -37,31 +33,4 @@ public interface TaskService {
     Collection<Task> findAllDoneOrderById(String userZoneId);
 
     Collection<Task> findAllNewOrderById(String userZoneId);
-
-    /**
-     * Метод устанавливает значение categories
-     * Преобразовывая Set<Integer> iDs в new Category(id)
-     *
-     * @param task       Task
-     * @param categoryId Set<Integer>
-     * @return Task
-     */
-    default Task setCategories(Task task, Set<Integer> categoryId) {
-        Set<Category> categories = new HashSet<>();
-        if (categoryId != null && !categoryId.isEmpty()) {
-            categories = categoryId.stream()
-                    .map(id -> new Category(id, null))
-                    .collect(Collectors.toSet());
-        }
-        task.setCategories(categories);
-        return task;
-    }
-
-    default Task setPriorityCategories(Task task, Set<Integer> categoryId, int priorityId) {
-        setCategories(task, categoryId);
-        if (priorityId > 0) {
-            task.setPriority(new Priority(priorityId, null, priorityId));
-        }
-        return task;
-    }
 }

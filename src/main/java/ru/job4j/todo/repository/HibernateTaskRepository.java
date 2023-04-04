@@ -63,7 +63,7 @@ public class HibernateTaskRepository implements TaskRepository {
      */
     @Override
     public void update(Task task) {
-        crudRepository.run(session -> session.merge(task));
+        crudRepository.run(session -> session.update(task));
     }
 
     /**

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.*;
 import ru.job4j.todo.configuration.HibernateConfiguration;
 import ru.job4j.todo.model.User;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 3. Мидл
@@ -22,28 +22,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class HibernateUserRepositoryTest {
     private static SessionFactory sf;
-    private static CrudRepository crud;
     private static HibernateUserRepository userRepository;
 
     private static void deleteUsers() {
-        var session = sf.openSession();
-        var transaction = session.beginTransaction();
-        try (session) {
-            var query = session.createQuery("delete from User");
-            query.executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw e;
-        }
+        var crud = new CrudRepository(sf);
+        crud.run("delete from User as u where u.id >: uId",
+                Map.of("uId", 0));
     }
 
     @BeforeAll
     public static void initRepository() {
         sf = new HibernateConfiguration().getSessionFactory();
-        crud = new CrudRepository(sf);
+        var crud = new CrudRepository(sf);
         userRepository = new HibernateUserRepository(crud);
     }
 

@@ -4,12 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * 3. Мидл
@@ -38,7 +35,6 @@ public class Task {
     private LocalDateTime created = LocalDateTime
             .now()
             .truncatedTo(ChronoUnit.SECONDS);
-    @Column(updatable = false)
     private boolean done;
     @ToString.Exclude
     @ManyToOne

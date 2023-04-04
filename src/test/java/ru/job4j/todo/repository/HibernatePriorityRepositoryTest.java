@@ -7,6 +7,7 @@ import ru.job4j.todo.model.Priority;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -23,30 +24,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
  */
 class HibernatePriorityRepositoryTest {
     private static SessionFactory sf;
-    private static CrudRepository crud;
     private static HibernatePriorityRepository priorityRepository;
-
-    private static void deletePriority() {
-        var session = sf.openSession();
-        var transaction = session.beginTransaction();
-        try (session) {
-            var query = session.createQuery("delete from Task");
-            query.executeUpdate();
-            query = session.createQuery("delete from Priority");
-            query.executeUpdate();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw e;
-        }
-    }
 
     @BeforeAll
     public static void initRepository() {
         sf = new HibernateConfiguration().getSessionFactory();
-        crud = new CrudRepository(sf);
+        var crud = new CrudRepository(sf);
         priorityRepository = new HibernatePriorityRepository(crud);
     }
 
@@ -55,19 +38,28 @@ class HibernatePriorityRepositoryTest {
         sf.close();
     }
 
+    private void delete() {
+        var crud = new CrudRepository(sf);
+        crud.run("delete from Task as t where t.id >:tId",
+                Map.of("tId", 0));
+        crud.run("delete from Priority as p where p.id >:pId",
+                Map.of("pId", 0));
+    }
+
     @BeforeEach
     public void deleteBefore() {
-        deletePriority();
+        delete();
     }
 
     @AfterEach
     public void deleteAfter() {
-        deletePriority();
+        delete();
     }
 
     @Test
     public void whenFindByIdPriorityThenReturnPriorityOptional() {
         var priority = new Priority(0, "priority", 5);
+        var crud = new CrudRepository(sf);
         crud.run(session -> session.persist(priority));
 
         var expected = Optional.of(priority);
@@ -88,6 +80,7 @@ class HibernatePriorityRepositoryTest {
         var prior1 = new Priority(0, "prior1", 1);
         var prior2 = new Priority(0, "prior2", 2);
         var prior3 = new Priority(0, "prior3", 3);
+        var crud = new CrudRepository(sf);
 
         crud.run(session -> session.persist(prior3));
         crud.run(session -> session.persist(prior1));

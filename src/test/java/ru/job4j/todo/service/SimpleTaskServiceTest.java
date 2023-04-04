@@ -47,5 +47,4 @@ class SimpleTaskServiceTest {
         var result = taskService.setTimeZone(localDateTime, p9TZ, defTZ);
         assertThat(result).isEqualToIgnoringSeconds(expected);
     }
-
 }

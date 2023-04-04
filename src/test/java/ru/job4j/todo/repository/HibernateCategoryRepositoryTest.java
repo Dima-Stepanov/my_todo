@@ -10,6 +10,7 @@ import ru.job4j.todo.model.Category;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -25,42 +26,31 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
  */
 class HibernateCategoryRepositoryTest {
     private static SessionFactory sf;
-    private static CrudRepository crud;
     private static HibernateCategoryRepository categoryRepository;
 
-    private static void clearCategory() {
-        var session = sf.openSession();
-        var transaction = session.beginTransaction();
-        try (session) {
-            var query = session.createQuery("delete from Category");
-            query.executeUpdate();
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw e;
-        }
+    private static void delete() {
+        var crud = new CrudRepository(sf);
+        crud.run("delete from Category as c where c.id >:cId",
+                Map.of("cId", 0));
     }
 
 
     @BeforeAll
     public static void initRepository() {
         sf = new HibernateConfiguration().getSessionFactory();
-        crud = new CrudRepository(sf);
+        var crud = new CrudRepository(sf);
         categoryRepository = new HibernateCategoryRepository(crud);
     }
 
     @BeforeEach
     public void deleteBefore() {
-        clearCategory();
+        delete();
     }
 
 
     @AfterEach
     public void deleteAfter() {
-        clearCategory();
+        delete();
     }
 
     @Test
@@ -68,6 +58,7 @@ class HibernateCategoryRepositoryTest {
         var cat1 = new Category(0, "cat1");
         var cat2 = new Category(0, "cat2");
         var cat3 = new Category(0, "cat3");
+        var crud = new CrudRepository(sf);
         crud.run(session -> session.persist(cat1));
         crud.run(session -> session.persist(cat2));
         crud.run(session -> session.persist(cat3));

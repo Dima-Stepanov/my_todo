@@ -3,15 +3,14 @@ package ru.job4j.todo.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.job4j.todo.model.Category;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +56,7 @@ public class SimpleTaskService implements TaskService {
                         task.getCreated(),
                         userTimeZone,
                         systemZoneId
-                        )
+                )
         );
         setCategories(task, categoryId);
         try {
@@ -146,5 +145,32 @@ public class SimpleTaskService implements TaskService {
         return tasks.stream()
                 .peek(task -> task.setCreated(setTimeZone(task.getCreated(), systemZoneId, userTimeZone)))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Метод устанавливает значение categories
+     * Преобразовывая Set<Integer> iDs в new Category(id)
+     *
+     * @param task       Task
+     * @param categoryId Set<Integer>
+     * @return Task
+     */
+    public Task setCategories(Task task, Set<Integer> categoryId) {
+        Set<Category> categories = new HashSet<>();
+        if (categoryId != null && !categoryId.isEmpty()) {
+            categories = categoryId.stream()
+                    .map(id -> new Category(id, null))
+                    .collect(Collectors.toSet());
+        }
+        task.setCategories(categories);
+        return task;
+    }
+
+    public Task setPriorityCategories(Task task, Set<Integer> categoryId, int priorityId) {
+        setCategories(task, categoryId);
+        if (priorityId > 0) {
+            task.setPriority(new Priority(priorityId, null, priorityId));
+        }
+        return task;
     }
 }
