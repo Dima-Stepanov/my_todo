@@ -33,7 +33,7 @@ JDK 17, Maven 3.8, PostgreSQL 14. <br>
 1. Создайте базу данных my_todo при помощи консоли PostgreSQL или терминала pgAdmin:<br>
    """CREATE DATABASE my_todo"""
 2. Скопировать проект из репозитория по ссылке:
-   <a href=https://git@github.com:Dima-Stepanov/my_todo.git><b>Проект TODO List</b></a>
+   <a href=https://git@github.com:dima-abc/my_todo.git><b>Проект TODO List</b></a>
 3. Перейдите в корень проекта и при помощи Maven соберите проект командой:<br>
    """mvn install -Pproduction -Dmaven.test.skip=true"""
 4. После успешной сборки проекта перейдите в каталог собранного проекта <b>target</b> и запустите приложение
@@ -86,5 +86,5 @@ JDK 17, Maven 3.8, PostgreSQL 14. <br>
 ### Контакты
 
 > email: [haoos@inbox.ru](mailto:haoos@inbox.ru) <br>
-> tl: [Dima_software](https://t.me/Dima_software) <br>
-> github.com: [Dima-Stepanov](https://github.com/Dima-Stepanov)
+> tl: [dima_abc](https://t.me/dima_abc) <br>
+> github.com: [dima-abc](https://github.com/dima-abc)
