@@ -33,13 +33,13 @@ JDK 17, Maven 3.8, PostgreSQL 14. <br>
 1. Создайте базу данных my_todo при помощи консоли PostgreSQL или терминала pgAdmin:<br>
    """CREATE DATABASE my_todo"""
 2. Скопировать проект из репозитория по ссылке:
-   <a href=https://git@github.com:dima-abc/my_todo.git><b>Проект TODO List</b></a>
-3. Перейдите в корень проекта и при помощи Maven соберите проект командой:<br>
+   [Проект TODO List](https://github.com/dima-abc/job4j_todo.git)<br>
+4. Перейдите в корень проекта и при помощи Maven соберите проект командой:<br>
    """mvn install -Pproduction -Dmaven.test.skip=true"""
-4. После успешной сборки проекта перейдите в каталог собранного проекта <b>target</b> и запустите приложение
+5. После успешной сборки проекта перейдите в каталог собранного проекта <b>target</b> и запустите приложение
    командой:<br>
    """java -jar my_todo-1.0.jar"""
-5. В браузере перейдите по ссылке http://localhost:8080/index
+6. В браузере перейдите по ссылке http://localhost:8080/index
 
 <h3>Взаимодействие с приложением</h3>
 
